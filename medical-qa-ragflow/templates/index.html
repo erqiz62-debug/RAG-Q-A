@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>医学QA系统 - 智能问答助手</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background: rgba(255,255,255,0.95);
+            border-radius: 25px;
+            padding: 15px 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .nav-brand i {
+            color: #667eea;
+            font-size: 1.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            color: #333;
+            text-decoration: none;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .nav-link i {
+            font-size: 0.9rem;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 30px;
+            flex: 1;
+        }
+
+        .chat-section {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 600px;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+            background: #f8f9fa;
+        }
+
+        .message {
+            margin-bottom: 25px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            animation: fadeInUp 0.3s ease-out;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .message.user .message-avatar {
+            background: #667eea;
+            color: white;
+        }
+
+        .message.bot .message-avatar {
+            background: #28a745;
+            color: white;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 12px 16px 12px 8px;
+            border-radius: 15px;
+            line-height: 1.8;
+            white-space: pre-line;
+            word-wrap: break-word;
+        }
+
+        .message.user .message-content {
+            background: #667eea;
+            color: white;
+            border-bottom-right-radius: 5px;
+            padding: 6px 16px 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .message.bot .message-content {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-indent: 2em;
+        }
+
+        .confidence-indicator {
+            margin: 12px auto 0;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: auto;
+            box-sizing: border-box;
+            text-indent: 0;
+        }
+
+        .confidence-high {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .confidence-medium {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .confidence-low {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .rag-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            margin-left: 8px;
+        }
+
+        .rag-sources {
+            margin-top: 12px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #495057;
+        }
+
+        .rag-sources ul {
+            margin: 5px 0 0 15px;
+            padding: 0;
+        }
+
+        .rag-sources li {
+            margin: 3px 0;
+        }
+
+        .textbook-references {
+            margin-top: 10px;
+            padding: 10px;
+            background: linear-gradient(135deg, #e3f2fd 0%, #e8f5e9 100%);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #1b5e20;
+            border-left: 3px solid #4caf50;
+        }
+
+        .textbook-references ul {
+            margin: 5px 0 0 15px;
+            padding: 0;
+        }
+
+        .textbook-references li {
+            margin: 3px 0;
+            list-style-type: decimal;
+        }
+
+        .chat-input-container {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            outline: none;
+            font-size: 14px;
+            resize: none;
+            min-height: 45px;
+            max-height: 100px;
+            font-family: inherit;
+        }
+
+        .chat-input:focus {
+            border-color: #667eea;
+        }
+
+        .send-button {
+            width: 45px;
+            height: 45px;
+            border: none;
+            border-radius: 50%;
+            background: #667eea;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .send-button:hover:not(:disabled) {
+            background: #5a6fd8;
+            transform: scale(1.05);
+        }
+
+        .send-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar-section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 8px;
+        }
+
+        .system-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #28a745;
+            animation: pulse 2s infinite;
+        }
+
+        .quick-questions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .quick-question {
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .quick-question:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .tips-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .tips-list p {
+            margin: 0;
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tips-list i {
+            color: #28a745;
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 10px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 3px;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #667eea;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .chat-section {
+                height: 500px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <div class="nav-content">
+                <a href="/" class="nav-brand">
+                    <i class="fas fa-stethoscope"></i>
+                    医学智能问答系统
+                </a>
+                <ul class="nav-links">
+                    <li><a href="/" class="nav-link active">
+                        <i class="fas fa-home"></i> 智能问答
+                    </a></li>
+                    <li><a href="/assessment" class="nav-link">
+                        <i class="fas fa-clipboard-check"></i> 智能自测
+                    </a></li>
+                    <li><a href="/comparison" class="nav-link">
+                        <i class="fas fa-balance-scale"></i> 对比分析
+                    </a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="header">
+            <h1><i class="fas fa-stethoscope"></i> 医学智能问答系统</h1>
+            <p class="subtitle">专业医学知识 · 智能问答助手 · 权威医学内容</p>
+        </div>
+
+        <div class="main-content">
+            <div class="chat-section">
+                <div class="chat-header">
+                    <i class="fas fa-comments"></i> 智能医学问答
+                </div>
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message bot">
+                        <div class="message-avatar">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <div class="message-content">
+        您好！我是医学智能问答助手，可以回答关于医学知识的各种问题。请输入您的问题，我会尽力为您提供准确的医学信息。
+                            <div class="confidence-indicator confidence-high">
+                                <i class="fas fa-shield-alt"></i> 系统就绪
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-input-container">
+                    <div class="chat-input-wrapper">
+                        <textarea 
+                            class="chat-input" 
+                            id="chatInput" 
+                            placeholder="请输入您的医学问题..."
+                            rows="1"
+                        ></textarea>
+                        <button class="send-button" id="sendButton" onclick="sendMessage()">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-lightbulb"></i> 快速提问</h3>
+                    <div class="quick-questions">
+                        <div class="quick-question" onclick="askQuickQuestion('什么是心肌梗死？')">
+                            什么是心肌梗死？
+                        </div>
+                        <div class="quick-question" onclick="askQuickQuestion('高血压的诊断标准是什么？')">
+                            高血压的诊断标准
+                        </div>
+                        <div class="quick-question" onclick="askQuickQuestion('心力衰竭的治疗方法有哪些？')">
+                            心力衰竭的治疗方法
+                        </div>
+                        <div class="quick-question" onclick="askQuickQuestion('冠心病的预防措施')">
+                            冠心病的预防措施
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-info-circle"></i> 使用提示</h3>
+                    <div class="tips-list">
+                        <p><i class="fas fa-check-circle"></i> 提问时尽量具体明确</p>
+                        <p><i class="fas fa-check-circle"></i> 可以询问症状、诊断、治疗等</p>
+                        <p><i class="fas fa-check-circle"></i> 支持医学概念解释</p>
+                        <p><i class="fas fa-check-circle"></i> 紧急情况请及时就医</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        let messageCount = 0;
+
+        // DOM加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatInput = document.getElementById('chatInput');
+            
+            // 自动调整输入框高度
+            chatInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+            });
+            
+            // 回车键发送消息
+            chatInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+        });
+
+        // 发送消息
+        function sendMessage() {
+            const chatInput = document.getElementById('chatInput');
+            const message = chatInput.value.trim();
+            
+            if (!message) return;
+            
+            // 添加用户消息
+            addMessage(message, 'user');
+            chatInput.value = '';
+            chatInput.style.height = 'auto';
+            
+            // 更新发送按钮状态
+            updateSendButtonState();
+            
+            // 显示输入指示器
+            showTypingIndicator();
+            
+            // 模拟思考时间后回复
+            setTimeout(() => {
+                hideTypingIndicator();
+                getAIResponse(message);
+            }, 1000 + Math.random() * 2000);
+        }
+
+        // 添加消息到聊天界面
+        function addMessage(content, sender) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            const avatar = sender === 'user' ? 'user' : 'user-md';
+            const icon = sender === 'user' ? 'fas fa-user' : 'fas fa-user-md';
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">
+                    <i class="fas ${icon}"></i>
+                </div>
+                <div class="message-content">
+                    ${content}
+                </div>
+            `;
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // 显示输入指示器
+        function showTypingIndicator() {
+            const chatMessages = document.getElementById('chatMessages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message bot typing-indicator';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = `
+                <div class="message-avatar">
+                    <i class="fas fa-user-md"></i>
+                </div>
+                <div>
+                    正在思考中<span class="typing-dots">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </span>
+                </div>
+            `;
+            chatMessages.appendChild(typingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // 隐藏输入指示器
+        function hideTypingIndicator() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+
+        // 获取AI回复（RAG检索增强生成）
+        function getAIResponse(question) {
+            // 调用后端API
+            fetch('/api/ask_question', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ question: question })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    addMessage('抱歉，服务暂时不可用。请稍后再试。', 'bot');
+                } else {
+                    const confidenceClass = data.confidence > 0.8 ? 'confidence-high' : 
+                                          data.confidence > 0.6 ? 'confidence-medium' : 'confidence-low';
+                    
+                    const confidenceText = data.confidence > 0.8 ? '高置信度' : 
+                                         data.confidence > 0.6 ? '中置信度' : '低置信度';
+                    
+                    // 构建RAG来源信息
+                    let sourcesHtml = '';
+                    if (data.retrieved_sources && data.retrieved_sources.length > 0) {
+                        sourcesHtml = `
+                            <div class="rag-sources">
+                                <i class="fas fa-database"></i> 参考文档：
+                                <ul>
+                                    ${data.retrieved_sources.map(src => `<li>${src}</li>`).join('')}
+                                </ul>
+                            </div>
+                        `;
+                    }
+                    
+                    // 构建教材溯源信息
+                    let textbookHtml = '';
+                    if (data.textbook_references && data.textbook_references.length > 0) {
+                        textbookHtml = `
+                            <div class="textbook-references">
+                                <i class="fas fa-book-open"></i> 教材溯源：
+                                <ul>
+                                    ${data.textbook_references.map(ref => `<li>${ref.textbook} 第${ref.page}页</li>`).join('')}
+                                </ul>
+                            </div>
+                        `;
+                    }
+                    
+                    addMessage(`
+                        ${data.answer}
+                        <div class="confidence-indicator ${confidenceClass}">
+                            <i class="fas fa-chart-line"></i> ${confidenceText} (${(data.confidence * 100).toFixed(0)}%)
+                            <span class="rag-badge">RAG</span>
+                        </div>
+                        ${sourcesHtml}
+                        ${textbookHtml}
+                    `, 'bot');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                addMessage('抱歉，网络连接错误。请检查网络后重试。', 'bot');
+            });
+        }
+
+        // 快速提问
+        function askQuickQuestion(question) {
+            document.getElementById('chatInput').value = question;
+            sendMessage();
+        }
+
+        // 更新发送按钮状态
+        function updateSendButtonState() {
+            const sendButton = document.getElementById('sendButton');
+            const chatInput = document.getElementById('chatInput');
+            sendButton.disabled = !chatInput.value.trim();
+        }
+    </script>
+</body>
+</html>

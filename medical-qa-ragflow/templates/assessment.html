@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能自测 - 医学能力评估</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .test-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .test-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .test-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+
+        .test-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        .test-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .test-description {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        .test-features {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .feature-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .quiz-interface {
+            display: none;
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        .quiz-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+            margin: -30px -30px 20px -30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .quiz-timer {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .quiz-progress {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+
+        .quiz-question {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .question-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .question-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 15px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option-label:hover {
+            border-color: #667eea;
+            background: #f0f2ff;
+        }
+
+        .option-label.selected {
+            border-color: #667eea;
+            background: #e8edff;
+        }
+
+        .option-label input[type="radio"],
+        .option-label input[type="checkbox"] {
+            margin-top: 2px;
+            accent-color: #667eea;
+        }
+
+        .option-text {
+            flex: 1;
+            line-height: 1.6;
+        }
+
+        .quiz-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 2px solid #e0e0e0;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+            border-color: #ccc;
+        }
+
+        .chapter-selection {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .chapter-select {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            outline: none;
+        }
+
+        .chapter-select:focus {
+            border-color: #667eea;
+        }
+
+        .result-container {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .result-score {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .result-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .result-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .result-item h4 {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .result-item .value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .wrong-answers {
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .wrong-answer-item {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .wrong-answer-item h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .wrong-answer-item p {
+            margin: 5px 0;
+            color: #666;
+        }
+
+        .correct-answer {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .test-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .quiz-actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-clipboard-check"></i> 智能自测系统</h1>
+            <p class="subtitle">医学能力评估 · 知识点检验 · 学习效果反馈</p>
+        </div>
+
+        <a href="/" class="back-button">
+            <i class="fas fa-arrow-left"></i> 返回主页
+        </a>
+
+        <div class="main-content">
+            <div class="test-options" id="testOptions">
+                <div class="test-card" onclick="startQuiz('quick')">
+                    <div class="test-icon"><i class="fas fa-bolt"></i></div>
+                    <div class="test-title">快速自测</div>
+                    <div class="test-description">
+                        10道精选题目，限时10分钟，快速检验核心知识点掌握情况
+                    </div>
+                    <div class="test-features">
+                        <span class="feature-badge">10题</span>
+                        <span class="feature-badge">10分钟</span>
+                        <span class="feature-badge">随机出题</span>
+                    </div>
+                </div>
+
+                <div class="test-card" onclick="startQuiz('chapter')">
+                    <div class="test-icon"><i class="fas fa-book-open"></i></div>
+                    <div class="test-title">章节练习</div>
+                    <div class="test-description">
+                        按章节分类练习，针对性强化薄弱知识点，系统性巩固学习内容
+                    </div>
+                    <div class="test-features">
+                        <span class="feature-badge">章节选择</span>
+                        <span class="feature-badge">难度分级</span>
+                        <span class="feature-badge">错题回顾</span>
+                    </div>
+                </div>
+
+                <div class="test-card" onclick="startQuiz('exam')">
+                    <div class="test-icon"><i class="fas fa-graduation-cap"></i></div>
+                    <div class="test-title">模拟考试</div>
+                    <div class="test-description">
+                        60分钟50题完整模拟考试，严格计时，全面评估医学知识掌握水平
+                    </div>
+                    <div class="test-features">
+                        <span class="feature-badge">50题</span>
+                        <span class="feature-badge">60分钟</span>
+                        <span class="feature-badge">完整考试</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chapter-selection" id="chapterSelection" style="display: none;">
+                <h2><i class="fas fa-book-open"></i> 选择章节</h2>
+                <p style="margin-bottom: 20px; color: #666;">请选择您要练习的章节</p>
+                <select class="chapter-select" id="chapterSelect">
+                    <option value="">加载中...</option>
+                </select>
+                <div class="quiz-actions" style="justify-content: center;">
+                    <button class="btn btn-secondary" onclick="cancelQuiz()">
+                        <i class="fas fa-times"></i> 取消
+                    </button>
+                    <button class="btn btn-primary" onclick="confirmChapter()">
+                        <i class="fas fa-check"></i> 开始练习
+                    </button>
+                </div>
+            </div>
+
+            <div class="quiz-interface" id="quizContainer">
+                <div class="quiz-header">
+                    <h3 id="quizTitle"><i class="fas fa-bolt"></i> 快速自测</h3>
+                    <div class="quiz-timer">剩余时间: <span id="quizTime">10:00</span></div>
+                </div>
+                <div class="quiz-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="quizProgress" style="width: 0%"></div>
+                    </div>
+                    <span id="quizProgressText">题目 1/10</span>
+                </div>
+                <div id="questionContainer"></div>
+                <div class="quiz-actions">
+                    <button class="btn btn-secondary" onclick="cancelQuiz()">
+                        <i class="fas fa-times"></i> 取消
+                    </button>
+                    <button class="btn btn-primary" id="nextButton" onclick="nextQuestion()" style="display: none;">
+                        <i class="fas fa-arrow-right"></i> 下一题
+                    </button>
+                    <button class="btn btn-primary" id="submitButton" onclick="submitQuiz()">
+                        <i class="fas fa-check"></i> 提交答案
+                    </button>
+                </div>
+            </div>
+
+            <div class="result-container" id="resultContainer" style="display: none;">
+                <div class="result-score" id="resultScore">85%</div>
+                <div class="result-details">
+                    <div class="result-item">
+                        <h4>正确题数</h4>
+                        <div class="value" id="resultCorrect">8/10</div>
+                    </div>
+                    <div class="result-item">
+                        <h4>用时</h4>
+                        <div class="value" id="resultTime">8:30</div>
+                    </div>
+                    <div class="result-item">
+                        <h4>正确率</h4>
+                        <div class="value" id="resultAccuracy">80%</div>
+                    </div>
+                </div>
+                <div class="wrong-answers" id="wrongAnswers"></div>
+                <button class="btn btn-primary" onclick="restartQuiz()" style="margin-top: 20px;">
+                    <i class="fas fa-redo"></i> 再测一次
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentQuiz = null;
+        let currentQuestionIndex = 0;
+        let userAnswers = {};
+        let timerInterval = null;
+        let timeRemaining = 0;
+        let quizStartTime = null;
+
+        async function startQuiz(type) {
+            try {
+                if (type === 'chapter') {
+                    showChapterSelection();
+                    return;
+                }
+
+                const response = await fetch('/api/quiz_start', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        type: type,
+                        chapter: ''
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.quiz_id) {
+                    currentQuiz = data;
+                    currentQuestionIndex = 0;
+                    userAnswers = {};
+                    showQuizInterface();
+                    startTimer(data.time_limit);
+                } else {
+                    alert('无法开始测验，请稍后重试');
+                }
+            } catch (error) {
+                console.error('Error starting quiz:', error);
+                alert('启动测验失败，请检查网络连接');
+            }
+        }
+
+        async function showChapterSelection() {
+            document.getElementById('testOptions').style.display = 'none';
+            document.getElementById('chapterSelection').style.display = 'block';
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('resultContainer').style.display = 'none';
+
+            try {
+                const response = await fetch('/api/quiz_chapters');
+                const data = await response.json();
+                
+                const select = document.getElementById('chapterSelect');
+                select.innerHTML = data.chapters.map(chapter => 
+                    `<option value="${chapter.id}">${chapter.name} (${chapter.count}题)</option>`
+                ).join('');
+            } catch (error) {
+                console.error('Error loading chapters:', error);
+                alert('加载章节失败，请检查网络连接');
+            }
+        }
+
+        async function confirmChapter() {
+            const chapter = document.getElementById('chapterSelect').value;
+            if (!chapter) {
+                alert('请选择一个章节');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/quiz_start', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        type: 'chapter',
+                        chapter: chapter
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.quiz_id) {
+                    currentQuiz = data;
+                    currentQuestionIndex = 0;
+                    userAnswers = {};
+                    showQuizInterface();
+                    startTimer(data.time_limit);
+                } else {
+                    alert('无法开始测验，请稍后重试');
+                }
+            } catch (error) {
+                console.error('Error starting chapter quiz:', error);
+                alert('启动测验失败，请检查网络连接');
+            }
+        }
+
+        function showQuizInterface() {
+            document.getElementById('testOptions').style.display = 'none';
+            document.getElementById('quizContainer').style.display = 'block';
+            document.getElementById('resultContainer').style.display = 'none';
+            
+            const titles = {
+                'quick': '快速自测',
+                'chapter': '章节练习',
+                'exam': '模拟考试'
+            };
+            
+            document.getElementById('quizTitle').innerHTML = 
+                `<i class="fas fa-${currentQuiz.type === 'quick' ? 'bolt' : currentQuiz.type === 'chapter' ? 'book-open' : 'graduation-cap'}"></i> ${titles[currentQuiz.type]}`;
+            
+            displayQuestion();
+        }
+
+        function displayQuestion() {
+            const question = currentQuiz.questions[currentQuestionIndex];
+            const container = document.getElementById('questionContainer');
+            
+            const inputType = question.type === 'multiple' ? 'checkbox' : 'radio';
+            
+            let optionsHtml = question.options.map((opt, idx) => `
+                <label class="option-label" onclick="selectOption(this, '${question.id}', ${idx})">
+                    <input type="${inputType}" name="q${question.id}" value="${idx}">
+                    <span class="option-text">${opt}</span>
+                </label>
+            `).join('');
+            
+            container.innerHTML = `
+                <div class="quiz-question">
+                    <div class="question-title">${currentQuestionIndex + 1}. ${question.question}</div>
+                    <div class="question-options">
+                        ${optionsHtml}
+                    </div>
+                </div>
+            `;
+            
+            updateProgress();
+            updateButtons();
+        }
+
+        function updateButtons() {
+            const isLastQuestion = currentQuestionIndex === currentQuiz.questions.length - 1;
+            const nextButton = document.getElementById('nextButton');
+            const submitButton = document.getElementById('submitButton');
+            
+            if (isLastQuestion) {
+                nextButton.style.display = 'none';
+                submitButton.style.display = 'flex';
+            } else {
+                nextButton.style.display = 'flex';
+                submitButton.style.display = 'none';
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < currentQuiz.questions.length - 1) {
+                currentQuestionIndex++;
+                displayQuestion();
+            }
+        }
+
+        function selectOption(label, questionId, optionIndex) {
+            const question = currentQuiz.questions[currentQuestionIndex];
+            
+            if (question.type === 'single') {
+                document.querySelectorAll(`input[name="q${questionId}"]`).forEach(input => {
+                    input.parentElement.classList.remove('selected');
+                });
+                label.classList.add('selected');
+                userAnswers[questionId] = [optionIndex];
+            } else {
+                const input = label.querySelector('input');
+                if (input.checked) {
+                    label.classList.add('selected');
+                    if (!userAnswers[questionId]) {
+                        userAnswers[questionId] = [];
+                    }
+                    if (!userAnswers[questionId].includes(optionIndex)) {
+                        userAnswers[questionId].push(optionIndex);
+                    }
+                } else {
+                    label.classList.remove('selected');
+                    const idx = userAnswers[questionId].indexOf(optionIndex);
+                    if (idx > -1) {
+                        userAnswers[questionId].splice(idx, 1);
+                    }
+                }
+            }
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestionIndex + 1) / currentQuiz.questions.length) * 100;
+            document.getElementById('quizProgress').style.width = progress + '%';
+            document.getElementById('quizProgressText').textContent = 
+                `题目 ${currentQuestionIndex + 1}/${currentQuiz.questions.length}`;
+        }
+
+        function startTimer(timeLimit) {
+            timeRemaining = timeLimit;
+            quizStartTime = Date.now();
+            
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+            
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                
+                const minutes = Math.floor(timeRemaining / 60);
+                const seconds = timeRemaining % 60;
+                document.getElementById('quizTime').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    alert('时间到！自动提交答案');
+                    submitQuiz();
+                }
+            }, 1000);
+        }
+
+        async function submitQuiz() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+            
+            const timeUsed = Math.floor((Date.now() - quizStartTime) / 1000);
+            
+            try {
+                const response = await fetch('/api/quiz_submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        quiz_id: currentQuiz.quiz_id,
+                        answers: userAnswers,
+                        time_used: timeUsed
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showResult(result);
+                } else {
+                    alert('提交失败，请重试');
+                }
+            } catch (error) {
+                console.error('Error submitting quiz:', error);
+                alert('提交失败，请检查网络连接');
+            }
+        }
+
+        function showResult(result) {
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('resultContainer').style.display = 'block';
+            
+            document.getElementById('resultScore').textContent = result.score + '%';
+            document.getElementById('resultCorrect').textContent = 
+                `${result.correct_count}/${result.total_count}`;
+            
+            const minutes = Math.floor(result.time_used / 60);
+            const seconds = result.time_used % 60;
+            document.getElementById('resultTime').textContent = 
+                `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            document.getElementById('resultAccuracy').textContent = result.score + '%';
+            
+            if (result.wrong_answers && result.wrong_answers.length > 0) {
+                const wrongContainer = document.getElementById('wrongAnswers');
+                wrongContainer.innerHTML = '<h3>错题分析</h3>';
+                
+                result.wrong_answers.forEach(wrong => {
+                    const question = currentQuiz.questions.find(q => q.id === parseInt(wrong.question_id));
+                    if (question) {
+                        const wrongHtml = `
+                            <div class="wrong-answer-item">
+                                <h4>题目 ${wrong.question_id}: ${question.question}</h4>
+                                <p>您的答案: ${wrong.user_answer.map(i => question.options[i]).join(', ')}</p>
+                                <p class="correct-answer">正确答案: ${wrong.correct_answer.map(i => question.options[i]).join(', ')}</p>
+                            </div>
+                        `;
+                        wrongContainer.innerHTML += wrongHtml;
+                    }
+                });
+            } else {
+                document.getElementById('wrongAnswers').innerHTML = '<p style="color: #28a745; font-size: 1.2rem;">🎉 太棒了！全部正确！</p>';
+            }
+            
+            updateQuizStats(result);
+        }
+
+        function updateQuizStats(result) {
+            let stats = JSON.parse(localStorage.getItem('quizStats') || '{}');
+            stats.totalTests = (stats.totalTests || 0) + 1;
+            stats.totalCorrect = (stats.totalCorrect || 0) + result.correct_count;
+            stats.totalQuestions = (stats.totalQuestions || 0) + result.total_count;
+            stats.totalTime = (stats.totalTime || 0) + result.time_used;
+            localStorage.setItem('quizStats', JSON.stringify(stats));
+        }
+
+        function cancelQuiz() {
+            if (confirm('确定要取消当前测验吗？')) {
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                }
+                document.getElementById('quizContainer').style.display = 'none';
+                document.getElementById('chapterSelection').style.display = 'none';
+                document.getElementById('resultContainer').style.display = 'none';
+                document.getElementById('testOptions').style.display = 'grid';
+            }
+        }
+
+        function restartQuiz() {
+            document.getElementById('resultContainer').style.display = 'none';
+            document.getElementById('testOptions').style.display = 'grid';
+            currentQuiz = null;
+            userAnswers = {};
+            currentQuestionIndex = 0;
+        }
+    </script>
+</body>
+</html>

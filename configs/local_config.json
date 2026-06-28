@@ -1,0 +1,91 @@
+{
+  "local_system": {
+    "enabled": true,
+    "data_root": "D:\\Study\\py_program\\导出分块\\数据",
+    "knowledge_base_file": "./data/local_knowledge_base.json",
+    "vector_db_directory": "./data/chroma_db",
+    "collection_name": "medical_knowledge"
+  },
+  "ragflow": {
+    "enabled": false,
+    "note": "RagFlow已禁用，系统完全本地化"
+  },
+  "models": {
+    "embedding": {
+      "name": "BAAI/bge-large-zh",
+      "dimension": 1024,
+      "max_seq_length": 512,
+      "local_mode": true,
+      "note": "使用本地嵌入模型，不调用外部API"
+    },
+    "reranker": {
+      "name": "BAAI/bge-reranker-large",
+      "max_seq_length": 512,
+      "enabled": false,
+      "note": "重排序功能暂时禁用"
+    },
+    "llm": {
+      "provider": "local",
+      "model": "local_qa",
+      "max_tokens": 2048,
+      "temperature": 0.1,
+      "note": "使用本地问答系统，不调用外部LLM API"
+    }
+  },
+  "retrieval": {
+    "top_k": 5,
+    "similarity_threshold": 0.3,
+    "vector_weight": 0.7,
+    "keyword_weight": 0.3,
+    "method": "hybrid",
+    "note": "混合检索：向量检索 + 关键词检索"
+  },
+  "chunking": {
+    "chunk_size": 1000,
+    "chunk_overlap": 200,
+    "strategy": "imported",
+    "preserve_structure": true,
+    "note": "使用RagFlow导出的分块，不重新分块"
+  },
+  "citation": {
+    "format": "page_reference",
+    "include_page_number": true,
+    "include_document_title": true,
+    "highlight_snippet": true
+  },
+  "database": {
+    "vector_db": {
+      "type": "chroma",
+      "persist_directory": "./data/chroma_db",
+      "collection_name": "medical_knowledge",
+      "fallback_to_memory": true
+    },
+    "metadata_storage": {
+      "type": "json",
+      "database_path": "./data/local_knowledge_base.json"
+    }
+  },
+  "medical_specific": {
+    "terminology_mapping": {
+      "disease_synonyms": true,
+      "medical_abbreviations": true,
+      "drug_name_standardization": true
+    },
+    "quality_filters": {
+      "minimum_chunk_length": 50,
+      "maximum_chunk_length": 2000,
+      "content_type_validation": ["text", "table", "figure"]
+    }
+  },
+  "web_server": {
+    "app_port": 5001,
+    "web_server_port": 8082,
+    "host": "0.0.0.0",
+    "debug": true
+  },
+  "logging": {
+    "level": "INFO",
+    "log_file": "./logs/local_system.log",
+    "log_format": "%(asctime)s - %(levelname)s - %(message)s"
+  }
+}

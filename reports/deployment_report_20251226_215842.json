@@ -1,0 +1,264 @@
+{
+  "deployment_info": {
+    "timestamp": "2025-12-26T21:58:42.623857",
+    "project_root": "D:\\BS\\medical-qa-ragflow",
+    "python_version": "3.7.6",
+    "deployment_status": "completed"
+  },
+  "deployment_log": [
+    {
+      "timestamp": "2025-12-26T21:07:53.961461",
+      "step": "环境检查",
+      "status": "started",
+      "message": ""
+    },
+    {
+      "timestamp": "2025-12-26T21:07:53.961461",
+      "step": "环境检查",
+      "status": "warning",
+      "message": "建议使用Python 3.8+，当前版本: 3.7，将使用兼容模式"
+    },
+    {
+      "timestamp": "2025-12-26T21:07:53.962563",
+      "step": "目录创建",
+      "status": "success",
+      "message": "创建目录: data/processed_chunks"
+    },
+    {
+      "timestamp": "2025-12-26T21:07:53.962563",
+      "step": "目录创建",
+      "status": "success",
+      "message": "创建目录: logs"
+    },
+    {
+      "timestamp": "2025-12-26T21:07:53.962563",
+      "step": "环境检查",
+      "status": "success",
+      "message": "环境检查通过"
+    },
+    {
+      "timestamp": "2025-12-26T21:07:53.962563",
+      "step": "依赖安装",
+      "status": "started",
+      "message": ""
+    },
+    {
+      "timestamp": "2025-12-26T21:07:55.244259",
+      "step": "依赖安装",
+      "status": "warning",
+      "message": "安装失败（可选）: torch>=1.9.0"
+    },
+    {
+      "timestamp": "2025-12-26T21:13:47.741326",
+      "step": "依赖安装",
+      "status": "warning",
+      "message": "安装失败（可选）: transformers>=4.20.0"
+    },
+    {
+      "timestamp": "2025-12-26T21:14:05.995953",
+      "step": "依赖安装",
+      "status": "warning",
+      "message": "安装失败（可选）: sentence-transformers>=2.2.0"
+    },
+    {
+      "timestamp": "2025-12-26T21:14:06.449305",
+      "step": "依赖安装",
+      "status": "success",
+      "message": "安装成功: numpy>=1.21.0"
+    },
+    {
+      "timestamp": "2025-12-26T21:14:06.912604",
+      "step": "依赖安装",
+      "status": "success",
+      "message": "安装成功: pandas>=1.3.0"
+    },
+    {
+      "timestamp": "2025-12-26T21:34:40.745162",
+      "step": "依赖安装",
+      "status": "success",
+      "message": "安装成功: scikit-learn>=1.0.0"
+    },
+    {
+      "timestamp": "2025-12-26T21:36:56.401694",
+      "step": "依赖安装",
+      "status": "success",
+      "message": "安装成功: fastapi>=0.68.0"
+    },
+    {
+      "timestamp": "2025-12-26T21:37:08.907488",
+      "step": "依赖安装",
+      "status": "success",
+      "message": "安装成功: uvicorn>=0.15.0"
+    },
+    {
+      "timestamp": "2025-12-26T21:52:52.376663",
+      "step": "依赖安装",
+      "status": "warning",
+      "message": "安装失败（可选）: chromadb>=0.3.0"
+    },
+    {
+      "timestamp": "2025-12-26T21:52:52.990082",
+      "step": "依赖安装",
+      "status": "success",
+      "message": "安装成功: jieba>=0.42.1"
+    },
+    {
+      "timestamp": "2025-12-26T21:53:55.961128",
+      "step": "依赖安装",
+      "status": "success",
+      "message": "安装成功: openai>=0.27.0"
+    },
+    {
+      "timestamp": "2025-12-26T21:53:56.628939",
+      "step": "依赖安装",
+      "status": "success",
+      "message": "安装成功: requests>=2.26.0"
+    },
+    {
+      "timestamp": "2025-12-26T21:53:57.263686",
+      "step": "依赖安装",
+      "status": "success",
+      "message": "安装成功: python-dotenv>=0.19.0"
+    },
+    {
+      "timestamp": "2025-12-26T21:55:34.973314",
+      "step": "依赖安装",
+      "status": "success",
+      "message": "安装成功: pdf2image>=1.16.0"
+    },
+    {
+      "timestamp": "2025-12-26T21:55:38.102242",
+      "step": "依赖安装",
+      "status": "success",
+      "message": "安装成功: pytesseract>=0.3.8"
+    },
+    {
+      "timestamp": "2025-12-26T21:55:38.734991",
+      "step": "依赖安装",
+      "status": "success",
+      "message": "安装成功: pillow>=8.3.0"
+    },
+    {
+      "timestamp": "2025-12-26T21:58:42.498336",
+      "step": "依赖安装",
+      "status": "warning",
+      "message": "安装失败（可选）: spacy>=3.4.0"
+    },
+    {
+      "timestamp": "2025-12-26T21:58:42.499578",
+      "step": "依赖安装",
+      "status": "success",
+      "message": "依赖安装完成"
+    },
+    {
+      "timestamp": "2025-12-26T21:58:42.499578",
+      "step": "模型设置",
+      "status": "started",
+      "message": ""
+    },
+    {
+      "timestamp": "2025-12-26T21:58:42.499578",
+      "step": "模型设置",
+      "status": "success",
+      "message": "模型配置完成: BAAI/bge-large-zh"
+    },
+    {
+      "timestamp": "2025-12-26T21:58:42.500583",
+      "step": "模型设置",
+      "status": "success",
+      "message": "模型配置完成: BAAI/bge-reranker-large"
+    },
+    {
+      "timestamp": "2025-12-26T21:58:42.500767",
+      "step": "模型设置",
+      "status": "success",
+      "message": "模型配置完成: zh_core_web_sm"
+    },
+    {
+      "timestamp": "2025-12-26T21:58:42.500767",
+      "step": "模型设置",
+      "status": "success",
+      "message": "模型设置完成"
+    },
+    {
+      "timestamp": "2025-12-26T21:58:42.500767",
+      "step": "系统配置",
+      "status": "started",
+      "message": ""
+    },
+    {
+      "timestamp": "2025-12-26T21:58:42.502808",
+      "step": "配置验证",
+      "status": "success",
+      "message": "配置文件有效: configs/ragflow_config.json"
+    },
+    {
+      "timestamp": "2025-12-26T21:58:42.502808",
+      "step": "配置验证",
+      "status": "success",
+      "message": "配置文件有效: configs/retrieval_config.json"
+    },
+    {
+      "timestamp": "2025-12-26T21:58:42.503839",
+      "step": "配置验证",
+      "status": "success",
+      "message": "配置文件有效: configs/medical_chunking_config.json"
+    },
+    {
+      "timestamp": "2025-12-26T21:58:42.503839",
+      "step": "系统配置",
+      "status": "success",
+      "message": "系统配置完成"
+    },
+    {
+      "timestamp": "2025-12-26T21:58:42.503839",
+      "step": "系统测试",
+      "status": "started",
+      "message": ""
+    },
+    {
+      "timestamp": "2025-12-26T21:58:42.504851",
+      "step": "模块测试",
+      "status": "warning",
+      "message": "模块 scripts.vectorization_engine 测试失败: No module named 'vectorization_engine'"
+    },
+    {
+      "timestamp": "2025-12-26T21:58:42.505862",
+      "step": "模块测试",
+      "status": "warning",
+      "message": "模块 scripts.deepseek_integration 测试失败: No module named 'deepseek_integration'"
+    },
+    {
+      "timestamp": "2025-12-26T21:58:42.623857",
+      "step": "检索测试",
+      "status": "success",
+      "message": "检索测试通过，找到 2 个结果"
+    },
+    {
+      "timestamp": "2025-12-26T21:58:42.623857",
+      "step": "系统测试",
+      "status": "success",
+      "message": "系统测试完成"
+    },
+    {
+      "timestamp": "2025-12-26T21:58:42.623857",
+      "step": "报告生成",
+      "status": "started",
+      "message": ""
+    }
+  ],
+  "system_status": {
+    "core_modules": "✅ 已配置",
+    "vector_database": "✅ 已配置",
+    "embedding_models": "✅ 已配置",
+    "deepseek_integration": "✅ 已配置",
+    "retrieval_system": "✅ 已配置"
+  },
+  "next_steps": [
+    "配置DeepSeek API密钥",
+    "导入医学PDF教材",
+    "执行向量化处理",
+    "部署RAGFlow服务",
+    "进行生产环境测试"
+  ]
+}

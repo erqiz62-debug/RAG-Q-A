@@ -1,0 +1,12 @@
+{
+  "success": true,
+  "total_documents": 86,
+  "total_chunks": 8482,
+  "vector_db_stats": {
+    "total_chunks": 0,
+    "collection_name": "medical_knowledge",
+    "persist_directory": "./data/chroma_db",
+    "inverted_index_size": 0
+  },
+  "knowledge_base_file": "data\\local_knowledge_base.json"
+}

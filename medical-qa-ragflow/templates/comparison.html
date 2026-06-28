@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>对比分析 - 医学概念差异查询</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .comparison-interface {
+            margin-bottom: 40px;
+        }
+
+        .comparison-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 20px;
+            margin-bottom: 30px;
+            align-items: end;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .comparison-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .comparison-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .comparison-input.error {
+            border-color: #f44336;
+        }
+
+        .search-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+        }
+
+        .suggestion-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .suggestion-item:hover {
+            background: #f8f9fa;
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .compare-btn {
+            padding: 15px 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 120px;
+            justify-content: center;
+        }
+
+        .compare-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .compare-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .quick-compare {
+            margin-bottom: 30px;
+        }
+
+        .quick-compare-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .quick-compare-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .quick-compare-item {
+            padding: 15px 20px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .quick-compare-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .quick-compare-item h4 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .quick-compare-item p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .comparison-results {
+            margin-bottom: 40px;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .results-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .export-btn {
+            padding: 10px 20px;
+            background: #f8f9fa;
+            color: #666;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .export-btn:hover {
+            background: #e9ecef;
+            border-color: #ccc;
+        }
+
+        .comparison-table {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+
+        .table-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .table-header h3 {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+
+        .table-header p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .concept-header {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 2px solid #e0e0e0;
+            text-align: center;
+        }
+
+        .concept-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .concept-category {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #667eea;
+            color: white;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .comparison-row {
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .comparison-row:last-child {
+            border-bottom: none;
+        }
+
+        .attribute-name {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            font-weight: 600;
+            color: #333;
+            border-right: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .attribute-icon {
+            font-size: 1.1rem;
+            color: #667eea;
+        }
+
+        .attribute-content {
+            padding: 15px 20px;
+            line-height: 1.6;
+        }
+
+        .similarity-indicator {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 30px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .similarity-score {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .similarity-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .similarity-bars {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .similarity-bar {
+            flex: 1;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .similarity-bar-fill {
+            height: 100%;
+            background: white;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .analysis-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .analysis-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .analysis-content {
+            line-height: 1.7;
+            color: #555;
+        }
+
+        .analysis-highlight {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .key-differences {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .difference-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .difference-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .difference-type {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .difference-description {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .loading-indicator {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        .loading-text {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid #fcc;
+            margin: 20px 0;
+            text-align: center;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-inputs {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .similarity-indicator {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .similarity-bars {
+                width: 100%;
+            }
+            
+            .key-differences {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-compare-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .main-content > * {
+            animation: fadeInUp 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-balance-scale"></i> 对比分析</h1>
+            <p class="subtitle">医学概念差异查询 · 深度对比分析</p>
+        </div>
+
+        <a href="/" class="back-button">
+            <i class="fas fa-arrow-left"></i> 返回主页
+        </a>
+
+        <div class="main-content">
+            <div class="comparison-interface">
+                <div class="comparison-inputs">
+                    <div class="input-group">
+                        <label class="input-label" for="concept1">
+                            <i class="fas fa-search"></i> 概念一
+                        </label>
+                        <input type="text" id="concept1" class="comparison-input" 
+                               placeholder="输入要对比的第一个概念..." autocomplete="off">
+                        <div class="search-suggestions" id="suggestions1"></div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label class="input-label" for="concept2">
+                            <i class="fas fa-search"></i> 概念二
+                        </label>
+                        <input type="text" id="concept2" class="comparison-input" 
+                               placeholder="输入要对比的第二个概念..." autocomplete="off">
+                        <div class="search-suggestions" id="suggestions2"></div>
+                    </div>
+                    
+                    <button class="compare-btn" id="compareBtn" onclick="performComparison()">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span>开始对比</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="quick-compare">
+                <div class="quick-compare-title">
+                    <i class="fas fa-bolt"></i>
+                    快速对比
+                </div>
+                <div class="quick-compare-grid">
+                    <div class="quick-compare-item" onclick="quickCompare('心脏病', '冠心病')">
+                        <h4>心脏病 vs 冠心病</h4>
+                        <p>了解心脏疾病分类差异</p>
+                    </div>
+                    <div class="quick-compare-item" onclick="quickCompare('心绞痛', '心肌梗死')">
+                        <h4>心绞痛 vs 心肌梗死</h4>
+                        <p>对比急性冠脉综合征</p>
+                    </div>
+                    <div class="quick-compare-item" onclick="quickCompare('心力衰竭', '心功能不全')">
+                        <h4>心力衰竭 vs 心功能不全</h4>
+                        <p>理解概念范畴差异</p>
+                    </div>
+                    <div class="quick-compare-item" onclick="quickCompare('原发性高血压', '继发性高血压')">
+                        <h4>原发性 vs 继发性高血压</h4>
+                        <p>分析高血压病因分类</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="loading-indicator" id="loadingIndicator">
+                <div class="loading-spinner"></div>
+                <div class="loading-text">正在分析对比结果...</div>
+            </div>
+
+            <div class="error-message" id="errorMessage">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>概念对比失败，请检查输入或重试</span>
+            </div>
+
+            <div class="comparison-results" id="comparisonResults" style="display: none;">
+                <div class="results-header">
+                    <div class="results-title">
+                        <i class="fas fa-chart-bar"></i>
+                        <span id="resultsTitle">对比结果</span>
+                    </div>
+                    <button class="export-btn" onclick="exportResults()">
+                        <i class="fas fa-download"></i>
+                        导出报告
+                    </button>
+                </div>
+
+                <div class="similarity-indicator">
+                    <div class="similarity-score" id="similarityScore">75%</div>
+                    <div>
+                        <div class="similarity-label">概念相似度</div>
+                        <div class="similarity-bars">
+                            <div class="similarity-bar">
+                                <div class="similarity-bar-fill" style="width: 75%"></div>
+                            </div>
+                            <div class="similarity-bar">
+                                <div class="similarity-bar-fill" style="width: 60%"></div>
+                            </div>
+                            <div class="similarity-bar">
+                                <div class="similarity-bar-fill" style="width: 45%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comparison-table">
+                    <div class="table-header">
+                        <h3 id="tableTitle">概念对比详情</h3>
+                        <p id="tableSubtitle">深度分析两个概念的异同点</p>
+                    </div>
+                    <div class="comparison-grid" id="comparisonGrid">
+                        <!-- 动态生成对比内容 -->
+                    </div>
+                </div>
+
+                <div class="analysis-section">
+                    <div class="analysis-title">
+                        <i class="fas fa-lightbulb"></i>
+                        深度分析
+                    </div>
+                    <div class="analysis-content" id="analysisContent">
+                        <!-- 动态生成分析内容 -->
+                    </div>
+                </div>
+
+                <div class="analysis-section">
+                    <div class="analysis-title">
+                        <i class="fas fa-exclamation-circle"></i>
+                        关键差异点
+                    </div>
+                    <div class="key-differences" id="keyDifferences">
+                        <!-- 动态生成差异点 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 医学概念数据库（简化版）
+        const medicalConcepts = {
+            '心脏病': {
+                category: '心血管疾病',
+                definition: '心脏结构和功能异常的疾病总称',
+                causes: '遗传因素、高血压、糖尿病、高血脂、吸烟等',
+                symptoms: '胸痛、心悸、呼吸困难、水肿、疲劳',
+                treatment: '药物治疗、介入治疗、手术治疗、生活方式调整',
+                prevention: '控制危险因素、健康饮食、规律运动、戒烟限酒'
+            },
+            '冠心病': {
+                category: '心血管疾病',
+                definition: '冠状动脉粥样硬化导致的心肌缺血性疾病',
+                causes: '冠状动脉粥样硬化、高血压、糖尿病、高血脂、吸烟',
+                symptoms: '胸痛（活动后加重）、心绞痛、心肌梗死',
+                treatment: '药物治疗、介入治疗（支架）、冠脉搭桥手术',
+                prevention: '控制三高、健康饮食、适量运动、戒烟限酒'
+            },
+            '心绞痛': {
+                category: '心血管疾病',
+                definition: '心肌缺血引起的胸痛症状',
+                causes: '冠状动脉狭窄或痉挛、心肌氧供需失衡',
+                symptoms: '胸骨后压榨性疼痛、可放射至左肩臂、持续数分钟',
+                treatment: '硝酸甘油、β受体阻滞剂、钙通道阻滞剂',
+                prevention: '避免诱发因素、规律服药、控制危险因素'
+            },
+            '心肌梗死': {
+                category: '心血管疾病',
+                definition: '心肌细胞缺血性坏死的严重疾病',
+                causes: '冠状动脉急性完全阻塞、血栓形成',
+                symptoms: '剧烈胸痛、大汗、恶心呕吐、心律失常、休克',
+                treatment: '紧急介入治疗、溶栓治疗、支持治疗',
+                prevention: '控制危险因素、及时治疗冠心病、定期复查'
+            },
+            '心力衰竭': {
+                category: '心血管疾病',
+                definition: '心脏泵血功能减退，不能满足机体代谢需求',
+                causes: '冠心病、高血压、心肌病、心脏瓣膜病',
+                symptoms: '呼吸困难、水肿、疲劳、心悸、咳嗽',
+                treatment: '利尿剂、ACEI/ARB、β受体阻滞剂、地高辛',
+                prevention: '控制基础疾病、避免诱因、规范用药'
+            },
+            '心功能不全': {
+                category: '心血管疾病',
+                definition: '心脏收缩或舒张功能异常的病理状态',
+                causes: '各种心脏病导致的心脏功能损害',
+                symptoms: '活动后气促、水肿、心率增快、肝脏肿大',
+                treatment: '针对病因治疗、强心利尿扩血管',
+                prevention: '早期诊断、积极治疗原发病'
+            },
+            '原发性高血压': {
+                category: '心血管疾病',
+                definition: '原因不明的血压升高，占高血压的90-95%',
+                causes: '遗传因素、环境因素、年龄、肥胖、钠摄入过多',
+                symptoms: '头痛、头晕、颈项僵硬、耳鸣、心悸',
+                treatment: '降压药物、生活方式干预、个体化治疗',
+                prevention: '控制体重、低盐饮食、规律运动、限酒'
+            },
+            '继发性高血压': {
+                category: '心血管疾病',
+                definition: '由明确疾病引起的血压升高',
+                causes: '肾脏疾病、内分泌疾病、血管疾病、药物因素',
+                symptoms: '血压升高、原发病症状、靶器官损害',
+                treatment: '治疗原发病、降压治疗、手术干预',
+                prevention: '早期发现原发病、积极治疗、避免诱因'
+            }
+        };
+
+        // 预定义对比结果
+        const comparisonResults = {
+            '心脏病|冠心病': {
+                similarity: 85,
+                title: '心脏病 vs 冠心病',
+                subtitle: '概念包含关系与疾病分类对比',
+                analysis: '冠心病是心脏病的一种特殊类型，属于<span class="analysis-highlight">冠状动脉粥样硬化性心脏病</span>。心脏病是一个更广泛的概念，包括冠心病、心律失常、心力衰竭等多种疾病。两者在症状和治疗方法上有相似性，但冠心病有其特定的<span class="analysis-highlight">发病机制和临床表现</span>。',
+                differences: [
+                    {
+                        type: '概念范围',
+                        icon: 'fas fa-layer-group',
+                        description: '心脏病是总称，冠心病是心脏病的一种类型'
+                    },
+                    {
+                        type: '发病机制',
+                        icon: 'fas fa-cogs',
+                        description: '冠心病特指冠状动脉病变，心脏病包含各种心脏结构功能异常'
+                    },
+                    {
+                        type: '诊断标准',
+                        icon: 'fas fa-stethoscope',
+                        description: '冠心病需要冠脉造影等特殊检查确诊'
+                    }
+                ],
+                grid: [
+                    { attribute: '定义', icon: 'fas fa-info-circle', values: ['心脏结构和功能异常的疾病总称', '冠状动脉粥样硬化导致的心肌缺血性疾病'] },
+                    { attribute: '分类', icon: 'fas fa-tags', values: ['包含多种心脏疾病类型', '心脏病的一种特殊类型'] },
+                    { attribute: '主要病因', icon: 'fas fa-virus', values: ['遗传、高血压、糖尿病等多种因素', '冠状动脉粥样硬化'] },
+                    { attribute: '典型症状', icon: 'fas fa-heartbeat', values: ['胸痛、心悸、呼吸困难等', '胸痛、活动后加重'] },
+                    { attribute: '治疗策略', icon: 'fas fa-pills', values: ['根据具体疾病类型制定', '抗血小板、调脂、介入治疗'] }
+                ]
+            },
+            '心绞痛|心肌梗死': {
+                similarity: 70,
+                title: '心绞痛 vs 心肌梗死',
+                subtitle: '急性冠脉综合征的不同阶段对比',
+                analysis: '心绞痛和心肌梗死都属于急性冠脉综合征，但严重程度不同。心绞痛是<span class="analysis-highlight">可逆性心肌缺血</span>，而心肌梗死是<span class="analysis-highlight">不可逆性心肌坏死</span>。两者在症状严重程度、持续时间、治疗紧迫性上有显著差异。',
+                differences: [
+                    {
+                        type: '病理程度',
+                        icon: 'fas fa-microscope',
+                        description: '心绞痛是可逆性缺血，心肌梗死是不可逆性坏死'
+                    },
+                    {
+                        type: '疼痛特点',
+                        icon: 'fas fa-exclamation-triangle',
+                        description: '心绞痛持续数分钟，心肌梗死持续超过20分钟'
+                    },
+                    {
+                        type: '紧急程度',
+                        icon: 'fas fa-ambulance',
+                        description: '心绞痛相对稳定，心肌梗死需要紧急救治'
+                    }
+                ],
+                grid: [
+                    { attribute: '病理机制', icon: 'fas fa-dna', values: ['心肌氧供需暂时失衡', '冠状动脉急性完全阻塞'] },
+                    { attribute: '疼痛持续时间', icon: 'fas fa-clock', values: ['数分钟，休息或服药后缓解', '超过20分钟，休息不缓解'] },
+                    { attribute: '心电图表现', icon: 'fas fa-chart-line', values: ['ST段压低或T波倒置', 'ST段抬高、病理性Q波'] },
+                    { attribute: '心肌酶学', icon: 'fas fa-vial', values: ['正常或轻度升高', '显著升高'] },
+                    { attribute: '预后', icon: 'fas fa-trending-up', values: ['相对较好，及时治疗可预防', '需紧急治疗，预后取决于救治时间'] }
+                ]
+            },
+            '心力衰竭|心功能不全': {
+                similarity: 90,
+                title: '心力衰竭 vs 心功能不全',
+                subtitle: '概念内涵与外延的深度对比',
+                analysis: '心力衰竭和心功能不全在临床上经常互换使用，但<span class="analysis-highlight">心功能不全</span>是一个更广泛的病理概念，包含了<span class="analysis-highlight">心力衰竭</span>在内的各种心脏功能异常状态。心力衰竭是心功能不全的严重阶段，伴有明显的临床症状和体征。',
+                differences: [
+                    {
+                        type: '概念范围',
+                        icon: 'fas fa-expand-arrows-alt',
+                        description: '心功能不全包含心力衰竭和其他轻度功能异常'
+                    },
+                    {
+                        type: '临床症状',
+                        icon: 'fas fa-user-md',
+                        description: '心功能不全可无症状，心力衰竭必有临床症状'
+                    },
+                    {
+                        type: '严重程度',
+                        icon: 'fas fa-signal',
+                        description: '心功能不全轻度，心力衰竭为重度'
+                    }
+                ],
+                grid: [
+                    { attribute: '定义范围', icon: 'fas fa-book', values: ['心脏收缩或舒张功能异常的状态', '伴有临床症状的心功能异常'] },
+                    { attribute: '临床症状', icon: 'fas fa-clipboard-check', values: ['可无症状或轻微症状', '必有呼吸困难、水肿等症状'] },
+                    { attribute: '诊断标准', icon: 'fas fa-search', values: ['心脏超声等检查发现功能异常', '功能异常+临床症状+体征'] },
+                    { attribute: '治疗策略', icon: 'fas fa-user-md', values: ['密切观察+早期干预', '积极强心利尿+综合治疗'] },
+                    { attribute: '预后评估', icon: 'fas fa-chart-bar', values: ['相对较好，可逆性较大', '需要长期管理，预后较差'] }
+                ]
+            },
+            '原发性高血压|继发性高血压': {
+                similarity: 75,
+                title: '原发性高血压 vs 继发性高血压',
+                subtitle: '高血压病因学分类对比分析',
+                analysis: '原发性和继发性高血压在<span class="analysis-highlight">病因、发病机制、诊断方法和治疗策略</span>上有根本性差异。原发性高血压占绝大多数，病因复杂；继发性高血压由明确疾病引起，占比较小但需要特殊治疗。',
+                differences: [
+                    {
+                        type: '病因明确性',
+                        icon: 'fas fa-question-circle',
+                        description: '原发性无明确病因，继发性有明确病因'
+                    },
+                    {
+                        type: '治疗重点',
+                        icon: 'fas fa-bullseye',
+                        description: '原发性以降压为主，继发性以治疗原发病为主'
+                    },
+                    {
+                        type: '发病比例',
+                        icon: 'fas fa-percentage',
+                        description: '原发性占90-95%，继发性占5-10%'
+                    }
+                ],
+                grid: [
+                    { attribute: '定义', icon: 'fas fa-stamp', values: ['原因不明的血压升高', '由明确疾病引起的血压升高'] },
+                    { attribute: '病因', icon: 'fas fa-virus', values: ['遗传+环境因素综合作用', '肾脏疾病、内分泌疾病等'] },
+                    { attribute: '发病比例', icon: 'fas fa-chart-pie', values: ['90-95%的高血压患者', '5-10%的高血压患者'] },
+                    { attribute: '诊断方法', icon: 'fas fa-microscope', values: ['排除继发性因素后诊断', '寻找原发病因确诊'] },
+                    { attribute: '治疗原则', icon: 'fas fa-pills', values: ['长期降压药物+生活方式', '治疗原发病+降压治疗'] }
+                ]
+            }
+        };
+
+        let currentComparison = null;
+
+        // DOM加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+        });
+
+        // 设置事件监听器
+        function setupEventListeners() {
+            const concept1Input = document.getElementById('concept1');
+            const concept2Input = document.getElementById('concept2');
+
+            concept1Input.addEventListener('input', function() {
+                showSuggestions(this.value, 'suggestions1');
+                updateCompareButton();
+            });
+
+            concept2Input.addEventListener('input', function() {
+                showSuggestions(this.value, 'suggestions2');
+                updateCompareButton();
+            });
+
+            // 键盘事件
+            document.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && (concept1Input.value || concept2Input.value)) {
+                    performComparison();
+                }
+            });
+        }
+
+        // 显示搜索建议
+        function showSuggestions(value, containerId) {
+            const container = document.getElementById(containerId);
+            
+            if (!value.trim()) {
+                container.style.display = 'none';
+                return;
+            }
+
+            const suggestions = Object.keys(medicalConcepts).filter(concept =>
+                concept.includes(value)
+            ).slice(0, 5);
+
+            if (suggestions.length === 0) {
+                container.style.display = 'none';
+                return;
+            }
+
+            container.innerHTML = suggestions.map(suggestion =>
+                `<div class="suggestion-item" onclick="selectSuggestion('${suggestion}', '${containerId}')">${suggestion}</div>`
+            ).join('');
+
+            container.style.display = 'block';
+        }
+
+        // 选择建议项
+        function selectSuggestion(value, containerId) {
+            const input = containerId === 'suggestions1' ? 
+                document.getElementById('concept1') : 
+                document.getElementById('concept2');
+            
+            input.value = value;
+            document.getElementById(containerId).style.display = 'none';
+            updateCompareButton();
+        }
+
+        // 更新对比按钮状态
+        function updateCompareButton() {
+            const concept1 = document.getElementById('concept1').value;
+            const concept2 = document.getElementById('concept2').value;
+            const compareBtn = document.getElementById('compareBtn');
+            
+            const canCompare = concept1.trim() && concept2.trim();
+            compareBtn.disabled = !canCompare;
+        }
+
+        // 执行对比分析
+        async function performComparison() {
+            const concept1 = document.getElementById('concept1').value;
+            const concept2 = document.getElementById('concept2').value;
+
+            if (!concept1 || !concept2) {
+                showError('请输入要对比的两个概念');
+                return;
+            }
+
+            // 显示加载状态
+            showLoading(true);
+            hideError();
+            hideResults();
+
+            try {
+                // 模拟API调用延迟
+                await new Promise(resolve => setTimeout(resolve, 1500));
+
+                // 生成对比结果
+                const results = generateComparisonResult(concept1, concept2);
+                currentComparison = { concept1, concept2, results };
+                
+                displayResults(results);
+                showLoading(false);
+                
+            } catch (error) {
+                showError('对比分析失败，请重试');
+                showLoading(false);
+            }
+        }
+
+        // 生成对比结果
+        function generateComparisonResult(concept1, concept2) {
+            const key = `${concept1}|${concept2}`;
+            const reverseKey = `${concept2}|${concept1}`;
+            
+            // 检查预定义结果
+            if (comparisonResults[key]) {
+                return comparisonResults[key];
+            } else if (comparisonResults[reverseKey]) {
+                const result = comparisonResults[reverseKey];
+                // 调换概念顺序
+                return {
+                    ...result,
+                    title: `${concept2} vs ${concept1}`,
+                    grid: result.grid.map(item => ({
+                        ...item,
+                        values: [item.values[1], item.values[0]]
+                    }))
+                };
+            } else {
+                // 生成动态对比结果
+                return generateDynamicComparison(concept1, concept2);
+            }
+        }
+
+        // 生成动态对比结果
+        function generateDynamicComparison(concept1, concept2) {
+            const data1 = medicalConcepts[concept1] || generateMockData(concept1);
+            const data2 = medicalConcepts[concept2] || generateMockData(concept2);
+            
+            // 计算相似度（基于属性匹配）
+            const similarity = calculateSimilarity(data1, data2);
+            
+            return {
+                similarity: similarity,
+                title: `${concept1} vs ${concept2}`,
+                subtitle: '动态生成的概念对比分析',
+                analysis: `基于医学知识库的<span class="analysis-highlight">深度分析</span>显示，${concept1}和${concept2}在多个维度上存在<span class="analysis-highlight">相似性和差异性</span>。两者都属于医学概念，但在具体定义、病因、症状和治疗等方面各有特点。`,
+                differences: [
+                    {
+                        type: '定义差异',
+                        icon: 'fas fa-info-circle',
+                        description: `${concept1}和${concept2}在基本定义上存在本质区别`
+                    },
+                    {
+                        type: '临床表现',
+                        icon: 'fas fa-stethoscope',
+                        description: '症状表现和体征特征各有特色'
+                    },
+                    {
+                        type: '治疗策略',
+                        icon: 'fas fa-pills',
+                        description: '治疗方法和管理原则有所不同'
+                    }
+                ],
+                grid: [
+                    { attribute: '定义', icon: 'fas fa-book', values: [data1.definition, data2.definition] },
+                    { attribute: '分类', icon: 'fas fa-tags', values: [data1.category, data2.category] },
+                    { attribute: '主要病因', icon: 'fas fa-virus', values: [data1.causes, data2.causes] },
+                    { attribute: '典型症状', icon: 'fas fa-heartbeat', values: [data1.symptoms, data2.symptoms] },
+                    { attribute: '治疗方案', icon: 'fas fa-pills', values: [data1.treatment, data2.treatment] },
+                    { attribute: '预防措施', icon: 'fas fa-shield-alt', values: [data1.prevention, data2.prevention] }
+                ]
+            };
+        }
+
+        // 计算概念相似度
+        function calculateSimilarity(data1, data2) {
+            let matchCount = 0;
+            let totalAttributes = 6; // 6个主要属性
+            
+            // 简化的相似度计算
+            const categories = data1.category === data2.category ? 1 : 0;
+            const similarities = [
+                data1.definition.includes(data2.category) || data2.definition.includes(data1.category) ? 0.3 : 0,
+                categories,
+                data1.symptoms.split('、').some(s => data2.symptoms.includes(s)) ? 0.3 : 0,
+                data1.treatment.split('、').some(t => data2.treatment.includes(t)) ? 0.3 : 0
+            ];
+            
+            const baseSimilarity = similarities.reduce((a, b) => a + b, 0) / totalAttributes;
+            return Math.round(baseSimilarity * 100);
+        }
+
+        // 生成模拟数据
+        function generateMockData(concept) {
+            return {
+                category: '医学概念',
+                definition: `${concept}是一个重要的医学概念，涵盖了相关的病理生理机制`,
+                causes: '多种因素综合作用',
+                symptoms: '临床表现多样化',
+                treatment: '综合治疗策略',
+                prevention: '预防为主的原则'
+            };
+        }
+
+        // 显示结果
+        function displayResults(results) {
+            // 更新标题
+            document.getElementById('resultsTitle').textContent = results.title;
+            document.getElementById('tableTitle').textContent = results.title;
+            document.getElementById('tableSubtitle').textContent = results.subtitle;
+
+            // 更新相似度
+            document.getElementById('similarityScore').textContent = results.similarity + '%';
+            
+            // 更新相似度条
+            const bars = document.querySelectorAll('.similarity-bar-fill');
+            bars[0].style.width = results.similarity + '%';
+            bars[1].style.width = (results.similarity - 15) + '%';
+            bars[2].style.width = (results.similarity - 30) + '%';
+
+            // 更新对比表格
+            const grid = document.getElementById('comparisonGrid');
+            grid.innerHTML = results.grid.map(item => `
+                <div class="comparison-row">
+                    <div class="attribute-name">
+                        <i class="${item.icon}"></i>
+                        ${item.attribute}
+                    </div>
+                    <div class="attribute-content">${item.values[0]}</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="attribute-name">
+                        <i class="${item.icon}"></i>
+                        ${item.attribute}
+                    </div>
+                    <div class="attribute-content">${item.values[1]}</div>
+                </div>
+            `).join('');
+
+            // 更新分析内容
+            document.getElementById('analysisContent').innerHTML = results.analysis;
+
+            // 更新关键差异
+            const differencesContainer = document.getElementById('keyDifferences');
+            differencesContainer.innerHTML = results.differences.map(diff => `
+                <div class="difference-card">
+                    <div class="difference-type">
+                        <i class="${diff.icon}"></i>
+                        ${diff.type}
+                    </div>
+                    <div class="difference-description">${diff.description}</div>
+                </div>
+            `).join('');
+
+            // 显示结果
+            document.getElementById('comparisonResults').style.display = 'block';
+        }
+
+        // 快速对比
+        function quickCompare(concept1, concept2) {
+            document.getElementById('concept1').value = concept1;
+            document.getElementById('concept2').value = concept2;
+            updateCompareButton();
+            performComparison();
+        }
+
+        // 导出结果
+        function exportResults() {
+            if (!currentComparison) {
+                showError('没有可导出的结果');
+                return;
+            }
+
+            const { concept1, concept2, results } = currentComparison;
+            const content = `
+# ${results.title}
+
+## 相似度分析
+概念相似度: ${results.similarity}%
+
+## 对比详情
+${results.grid.map(item => `### ${item.attribute}
+- ${concept1}: ${item.values[0]}
+- ${concept2}: ${item.values[1]}`).join('\n\n')}
+
+## 深度分析
+${results.analysis.replace(/<[^>]*>/g, '')}
+
+## 关键差异点
+${results.differences.map(diff => `- **${diff.type}**: ${diff.description}`).join('\n')}
+            `;
+
+            const blob = new Blob([content], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${concept1}_vs_${concept2}_对比分析.md`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // 显示加载状态
+        function showLoading(show) {
+            document.getElementById('loadingIndicator').style.display = show ? 'block' : 'none';
+        }
+
+        // 隐藏结果
+        function hideResults() {
+            document.getElementById('comparisonResults').style.display = 'none';
+        }
+
+        // 显示错误
+        function showError(message) {
+            const errorElement = document.getElementById('errorMessage');
+            errorElement.querySelector('span').textContent = message;
+            errorElement.style.display = 'block';
+            
+            setTimeout(() => {
+                hideError();
+            }, 5000);
+        }
+
+        // 隐藏错误
+        function hideError() {
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        // 点击外部关闭建议框
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.input-group')) {
+                document.getElementById('suggestions1').style.display = 'none';
+                document.getElementById('suggestions2').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

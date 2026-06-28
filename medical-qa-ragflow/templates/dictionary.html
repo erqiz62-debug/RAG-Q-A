@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>医学词典 - 医学概念查询</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 30px;
+        }
+
+        .search-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            font-size: 18px;
+        }
+
+        .concepts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .concept-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+
+        .concept-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .concept-definition {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .concept-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .concept-tag {
+            padding: 4px 12px;
+            background: #f0f2ff;
+            color: #667eea;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .detail-panel {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .detail-header {
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+
+        .detail-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .detail-subtitle {
+            color: #666;
+            font-style: italic;
+        }
+
+        .detail-section {
+            margin-bottom: 25px;
+        }
+
+        .detail-section h3 {
+            color: #667eea;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .detail-content {
+            color: #555;
+            line-height: 1.7;
+        }
+
+        .detail-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .detail-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #f5f5f5;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .detail-list li:last-child {
+            border-bottom: none;
+        }
+
+        .detail-list li::before {
+            content: "●";
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .search-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .concepts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .detail-panel {
+                position: static;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-book-medical"></i> 医学概念词典</h1>
+            <p class="subtitle">专业医学概念查询 · 权威医学知识库</p>
+        </div>
+
+        <a href="/" class="back-button">
+            <i class="fas fa-arrow-left"></i> 返回主页
+        </a>
+
+        <div class="main-content">
+            <div class="search-section">
+                <div class="search-box">
+                    <input 
+                        type="text" 
+                        class="search-input" 
+                        id="searchInput"
+                        placeholder="搜索医学概念、疾病、症状..."
+                    >
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+
+                <div class="search-stats">
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalConcepts">3</div>
+                        <div class="stat-label">总概念数</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="searchResults">0</div>
+                        <div class="stat-label">搜索结果</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="recentSearches">0</div>
+                        <div class="stat-label">今日查询</div>
+                    </div>
+                </div>
+
+                <div class="concepts-grid" id="conceptsGrid">
+                    <!-- 概念卡片将通过JavaScript动态生成 -->
+                </div>
+
+                <div class="empty-state" id="emptyState" style="display: none;">
+                    <i class="fas fa-search"></i>
+                    <h3>未找到相关概念</h3>
+                    <p>请尝试其他关键词或查看推荐概念</p>
+                </div>
+            </div>
+
+            <div class="detail-panel" id="detailPanel">
+                <div class="empty-state">
+                    <i class="fas fa-info-circle"></i>
+                    <h3>选择概念查看详情</h3>
+                    <p>点击左侧概念卡片查看详细信息</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        let allConcepts = [];
+        let filteredConcepts = [];
+        let searchCount = 0;
+
+        // DOM加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDictionary();
+            setupEventListeners();
+        });
+
+        // 初始化词典
+        async function initializeDictionary() {
+            try {
+                // 获取所有概念数据
+                const response = await fetch('/api/search_concepts', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ query: '' })
+                });
+                
+                const data = await response.json();
+                
+                if (data.concepts) {
+                    allConcepts = data.concepts;
+                    filteredConcepts = [...allConcepts];
+                    renderConcepts();
+                    updateStats();
+                }
+            } catch (error) {
+                console.error('Error loading concepts:', error);
+                // 使用默认数据
+                loadDefaultConcepts();
+            }
+        }
+
+        // 加载默认概念数据
+        function loadDefaultConcepts() {
+            allConcepts = [
+                {
+                    name: '心肌梗死',
+                    definition: '心肌梗死是心肌缺血性坏死，属于急性冠脉综合征',
+                    symptoms: ['胸骨后剧烈疼痛', '恶心呕吐', '呼吸困难']
+                },
+                {
+                    name: '心力衰竭',
+                    definition: '心力衰竭是心脏泵血功能受损导致的临床综合征',
+                    symptoms: ['呼吸困难', '疲劳', '水肿']
+                },
+                {
+                    name: '高血压',
+                    definition: '高血压是以体循环动脉压升高为主要表现的临床综合征',
+                    symptoms: ['头痛', '头晕', '心悸']
+                }
+            ];
+            filteredConcepts = [...allConcepts];
+            renderConcepts();
+            updateStats();
+        }
+
+        // 设置事件监听器
+        function setupEventListeners() {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', debounce(searchConcepts, 300));
+        }
+
+        // 防抖函数
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // 搜索概念
+        async function searchConcepts() {
+            const query = document.getElementById('searchInput').value.trim();
+            
+            if (!query) {
+                filteredConcepts = [...allConcepts];
+            } else {
+                try {
+                    const response = await fetch('/api/search_concepts', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ query: query })
+                    });
+                    
+                    const data = await response.json();
+                    filteredConcepts = data.concepts || [];
+                    
+                    searchCount++;
+                } catch (error) {
+                    console.error('Search error:', error);
+                    // 本地搜索
+                    filteredConcepts = allConcepts.filter(concept => 
+                        concept.name.includes(query) ||
+                        concept.definition.includes(query) ||
+                        concept.symptoms.some(symptom => symptom.includes(query))
+                    );
+                }
+            }
+            
+            renderConcepts();
+            updateStats();
+        }
+
+        // 渲染概念列表
+        function renderConcepts() {
+            const grid = document.getElementById('conceptsGrid');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (filteredConcepts.length === 0) {
+                grid.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            grid.style.display = 'grid';
+            emptyState.style.display = 'none';
+            
+            grid.innerHTML = filteredConcepts.map(concept => `
+                <div class="concept-card" onclick="showConceptDetail('${concept.name}')">
+                    <div class="concept-name">${concept.name}</div>
+                    <div class="concept-definition">${concept.definition}</div>
+                    <div class="concept-tags">
+                        ${concept.symptoms.slice(0, 3).map(symptom => 
+                            `<span class="concept-tag">${symptom}</span>`
+                        ).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 显示概念详情
+        async function showConceptDetail(conceptName) {
+            try {
+                const response = await fetch(`/api/get_concept_detail/${encodeURIComponent(conceptName)}`);
+                const data = await response.json();
+                
+                if (data.concept) {
+                    renderConceptDetail(data.concept);
+                }
+            } catch (error) {
+                console.error('Error loading concept detail:', error);
+                // 使用本地数据
+                const concept = allConcepts.find(c => c.name === conceptName);
+                if (concept) {
+                    renderLocalConceptDetail(concept);
+                }
+            }
+        }
+
+        // 渲染概念详情
+        function renderConceptDetail(concept) {
+            const panel = document.getElementById('detailPanel');
+            panel.innerHTML = `
+                <div class="detail-header">
+                    <div class="detail-title">${Object.keys(concept)[0] || '概念详情'}</div>
+                    <div class="detail-subtitle">详细医学信息</div>
+                </div>
+                
+                <div class="detail-section">
+                    <h3><i class="fas fa-info-circle"></i> 定义</h3>
+                    <div class="detail-content">${concept.definition || '暂无信息'}</div>
+                </div>
+                
+                <div class="detail-section">
+                    <h3><i class="fas fa-viruses"></i> 病因</h3>
+                    <div class="detail-content">${concept.etiology || '暂无信息'}</div>
+                </div>
+                
+                <div class="detail-section">
+                    <h3><i class="fas fa-thermometer-half"></i> 主要症状</h3>
+                    <ul class="detail-list">
+                        ${(concept.symptoms || []).map(symptom => 
+                            `<li>${symptom}</li>`
+                        ).join('')}
+                    </ul>
+                </div>
+                
+                <div class="detail-section">
+                    <h3><i class="fas fa-stethoscope"></i> 诊断方法</h3>
+                    <ul class="detail-list">
+                        ${(concept.diagnosis || []).map(method => 
+                            `<li>${method}</li>`
+                        ).join('')}
+                    </ul>
+                </div>
+                
+                <div class="detail-section">
+                    <h3><i class="fas fa-pills"></i> 治疗方案</h3>
+                    <ul class="detail-list">
+                        ${(concept.treatment || []).map(treatment => 
+                            `<li>${treatment}</li>`
+                        ).join('')}
+                    </ul>
+                </div>
+                
+                <div class="detail-section">
+                    <h3><i class="fas fa-chart-line"></i> 预后</h3>
+                    <div class="detail-content">${concept.prognosis || '暂无信息'}</div>
+                </div>
+            `;
+        }
+
+        // 渲染本地概念详情
+        function renderLocalConceptDetail(concept) {
+            const panel = document.getElementById('detailPanel');
+            panel.innerHTML = `
+                <div class="detail-header">
+                    <div class="detail-title">${concept.name}</div>
+                    <div class="detail-subtitle">详细医学信息</div>
+                </div>
+                
+                <div class="detail-section">
+                    <h3><i class="fas fa-info-circle"></i> 定义</h3>
+                    <div class="detail-content">${concept.definition}</div>
+                </div>
+                
+                <div class="detail-section">
+                    <h3><i class="fas fa-thermometer-half"></i> 主要症状</h3>
+                    <ul class="detail-list">
+                        ${concept.symptoms.map(symptom => 
+                            `<li>${symptom}</li>`
+                        ).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+
+        // 更新统计信息
+        function updateStats() {
+            document.getElementById('totalConcepts').textContent = allConcepts.length;
+            document.getElementById('searchResults').textContent = filteredConcepts.length;
+            document.getElementById('recentSearches').textContent = searchCount;
+        }
+    </script>
+</body>
+</html>

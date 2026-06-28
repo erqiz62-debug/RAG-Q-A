@@ -1,0 +1,577 @@
+[
+  {
+    "id": "chunk_0",
+    "type": "medical_knowledge_chain",
+    "chapter": "心脏疾病概述",
+    "section": "病因与病理",
+    "knowledge_patterns": [
+      "病因",
+      "病理"
+    ],
+    "content": "心脏疾病的病因多种多样，主要包括先天性因素和后天性因素。先天性心脏病是由于胚胎期心脏发育异常所致，而后天性心脏病则多由感染、缺血、创伤等因素引起。 病理变化方面，不同类型的心脏病有不同的病理特征。例如，冠心病主要表现为冠状动脉粥样硬化，导致心肌缺血缺氧。病理检查可见血管内膜增厚、脂质沉积、平滑肌细胞增生等改变。",
+    "completeness_score": 0.3333333333333333,
+    "metadata": {
+      "source_type": "medical_textbook",
+      "page_number": "N/A",
+      "document_title": "心脏疾病学",
+      "line_numbers": [
+        5,
+        7
+      ]
+    },
+    "medical_terms": [
+      "导致",
+      "表现",
+      "缺血",
+      "心脏",
+      "包括",
+      "先天性",
+      "特征",
+      "细胞",
+      "硬化",
+      "脂质",
+      "例如",
+      "胚胎",
+      "心肌缺血",
+      "不同",
+      "平滑肌",
+      "增厚",
+      "所致",
+      "内膜",
+      "增生",
+      "主要",
+      "创伤",
+      "因素",
+      "粥样",
+      "可见",
+      "血管",
+      "后天性",
+      "冠心病",
+      "异常",
+      "多种多样",
+      "缺氧",
+      "由于",
+      "病因",
+      "冠状动脉",
+      "病理变化",
+      "改变",
+      "病理检查",
+      "沉积",
+      "心脏病",
+      "类型",
+      "病理",
+      "引起",
+      "方面",
+      "疾病",
+      "感染",
+      "发育"
+    ],
+    "keywords": [
+      "因素",
+      "心脏病",
+      "心脏",
+      "主要",
+      "先天性"
+    ],
+    "difficulty_level": "intermediate",
+    "relevance_tags": [
+      "diagnosis",
+      "symptoms",
+      "knowledge_病因",
+      "knowledge_病理"
+    ]
+  },
+  {
+    "id": "chunk_1",
+    "type": "medical_knowledge_chain",
+    "chapter": "心脏疾病概述",
+    "section": "临床表现",
+    "knowledge_patterns": [
+      "临床表现"
+    ],
+    "content": "心脏疾病的临床表现主要包括以下几个方面：",
+    "completeness_score": 0.16666666666666666,
+    "metadata": {
+      "source_type": "medical_textbook",
+      "page_number": "N/A",
+      "document_title": "心脏疾病学",
+      "line_numbers": [
+        11
+      ]
+    },
+    "medical_terms": [
+      "几个",
+      "心脏",
+      "包括",
+      "临床表现",
+      "主要",
+      "方面",
+      "疾病",
+      "以下"
+    ],
+    "keywords": [
+      "心脏",
+      "疾病",
+      "临床表现",
+      "主要",
+      "包括"
+    ],
+    "difficulty_level": "intermediate",
+    "relevance_tags": [
+      "symptoms",
+      "knowledge_临床表现"
+    ]
+  },
+  {
+    "id": "chunk_2",
+    "type": "medical_knowledge_chain",
+    "chapter": "心脏疾病概述",
+    "section": "症状：",
+    "knowledge_patterns": [
+      "临床表现"
+    ],
+    "content": "- 胸痛：这是冠心病最常见的症状，多在活动后加重",
+    "completeness_score": 0.16666666666666666,
+    "metadata": {
+      "source_type": "medical_textbook",
+      "page_number": "N/A",
+      "document_title": "心脏疾病学",
+      "line_numbers": [
+        14
+      ]
+    },
+    "medical_terms": [
+      "常见",
+      "冠心病",
+      "活动",
+      "症状",
+      "加重",
+      "胸痛"
+    ],
+    "keywords": [
+      "胸痛",
+      "这是",
+      "冠心病",
+      "常见",
+      "症状"
+    ],
+    "difficulty_level": "intermediate",
+    "relevance_tags": [
+      "symptoms",
+      "knowledge_临床表现"
+    ]
+  },
+  {
+    "id": "chunk_3",
+    "type": "medical_knowledge_chain",
+    "chapter": "心脏疾病概述",
+    "section": "症状：",
+    "knowledge_patterns": [
+      "表格数据"
+    ],
+    "content": "- 心悸：心律失常的常见表现",
+    "completeness_score": 0.0,
+    "metadata": {
+      "source_type": "medical_textbook",
+      "page_number": "N/A",
+      "document_title": "心脏疾病学",
+      "line_numbers": [
+        16
+      ]
+    },
+    "medical_terms": [
+      "心悸",
+      "常见",
+      "表现",
+      "心律失常"
+    ],
+    "keywords": [
+      "心悸",
+      "心律失常",
+      "常见",
+      "表现"
+    ],
+    "difficulty_level": "intermediate",
+    "relevance_tags": [
+      "knowledge_表格数据",
+      "symptoms"
+    ]
+  },
+  {
+    "id": "chunk_4",
+    "type": "medical_knowledge_chain",
+    "chapter": "心脏疾病概述",
+    "section": "体征：",
+    "knowledge_patterns": [
+      "临床表现"
+    ],
+    "content": "- 心律不齐：各种心律失常的体征",
+    "completeness_score": 0.16666666666666666,
+    "metadata": {
+      "source_type": "medical_textbook",
+      "page_number": "N/A",
+      "document_title": "心脏疾病学",
+      "line_numbers": [
+        21
+      ]
+    },
+    "medical_terms": [
+      "体征",
+      "心律不齐",
+      "心律失常",
+      "各种"
+    ],
+    "keywords": [
+      "心律不齐",
+      "各种",
+      "心律失常",
+      "体征"
+    ],
+    "difficulty_level": "intermediate",
+    "relevance_tags": [
+      "knowledge_临床表现"
+    ]
+  },
+  {
+    "id": "chunk_5",
+    "type": "medical_knowledge_chain",
+    "chapter": "心脏疾病概述",
+    "section": "体征：",
+    "knowledge_patterns": [
+      "表格数据"
+    ],
+    "content": "- 心脏杂音：瓣膜病变的特征性表现",
+    "completeness_score": 0.0,
+    "metadata": {
+      "source_type": "medical_textbook",
+      "page_number": "N/A",
+      "document_title": "心脏疾病学",
+      "line_numbers": [
+        22
+      ]
+    },
+    "medical_terms": [
+      "特征性",
+      "表现",
+      "瓣膜",
+      "心脏",
+      "杂音",
+      "病变"
+    ],
+    "keywords": [
+      "心脏",
+      "杂音",
+      "瓣膜",
+      "病变",
+      "特征性"
+    ],
+    "difficulty_level": "intermediate",
+    "relevance_tags": [
+      "knowledge_表格数据",
+      "symptoms"
+    ]
+  },
+  {
+    "id": "chunk_6",
+    "type": "medical_knowledge_chain",
+    "chapter": "心脏疾病概述",
+    "section": "体征：",
+    "knowledge_patterns": [
+      "临床表现"
+    ],
+    "content": "- 颈静脉怒张：右心功能不全的体征",
+    "completeness_score": 0.16666666666666666,
+    "metadata": {
+      "source_type": "medical_textbook",
+      "page_number": "N/A",
+      "document_title": "心脏疾病学",
+      "line_numbers": [
+        23
+      ]
+    },
+    "medical_terms": [
+      "心功能",
+      "体征",
+      "颈静脉"
+    ],
+    "keywords": [
+      "颈静脉",
+      "怒张",
+      "心功能",
+      "不全",
+      "体征"
+    ],
+    "difficulty_level": "intermediate",
+    "relevance_tags": [
+      "knowledge_临床表现"
+    ]
+  },
+  {
+    "id": "chunk_7",
+    "type": "medical_knowledge_chain",
+    "chapter": "心脏疾病概述",
+    "section": "诊断",
+    "knowledge_patterns": [
+      "临床表现"
+    ],
+    "content": "心脏疾病的诊断需要结合临床表现、实验室检查和影像学检查：",
+    "completeness_score": 0.16666666666666666,
+    "metadata": {
+      "source_type": "medical_textbook",
+      "page_number": "N/A",
+      "document_title": "心脏疾病学",
+      "line_numbers": [
+        27
+      ]
+    },
+    "medical_terms": [
+      "影像学检查",
+      "心脏",
+      "实验室检查",
+      "需要",
+      "结合",
+      "临床表现",
+      "诊断",
+      "疾病"
+    ],
+    "keywords": [
+      "心脏",
+      "疾病",
+      "诊断",
+      "需要",
+      "结合"
+    ],
+    "difficulty_level": "intermediate",
+    "relevance_tags": [
+      "diagnosis",
+      "symptoms",
+      "knowledge_临床表现"
+    ]
+  },
+  {
+    "id": "chunk_8",
+    "type": "medical_knowledge_chain",
+    "chapter": "心脏疾病概述",
+    "section": "影像学检查：",
+    "knowledge_patterns": [
+      "诊断"
+    ],
+    "content": "- 冠脉造影：诊断冠心病的金标准",
+    "completeness_score": 0.16666666666666666,
+    "metadata": {
+      "source_type": "medical_textbook",
+      "page_number": "N/A",
+      "document_title": "心脏疾病学",
+      "line_numbers": [
+        37
+      ]
+    },
+    "medical_terms": [
+      "冠心病",
+      "冠脉",
+      "造影",
+      "标准",
+      "诊断"
+    ],
+    "keywords": [
+      "冠脉",
+      "造影",
+      "诊断",
+      "冠心病",
+      "标准"
+    ],
+    "difficulty_level": "intermediate",
+    "relevance_tags": [
+      "diagnosis",
+      "knowledge_诊断"
+    ]
+  },
+  {
+    "id": "chunk_9",
+    "type": "medical_knowledge_chain",
+    "chapter": "心脏疾病概述",
+    "section": "治疗原则",
+    "knowledge_patterns": [
+      "病因"
+    ],
+    "content": "心脏疾病的治疗应根据具体病因和病情制定个体化方案：",
+    "completeness_score": 0.16666666666666666,
+    "metadata": {
+      "source_type": "medical_textbook",
+      "page_number": "N/A",
+      "document_title": "心脏疾病学",
+      "line_numbers": [
+        41
+      ]
+    },
+    "medical_terms": [
+      "具体",
+      "病情",
+      "心脏",
+      "根据",
+      "制定",
+      "个体化",
+      "方案",
+      "病因",
+      "治疗",
+      "疾病"
+    ],
+    "keywords": [
+      "心脏",
+      "疾病",
+      "治疗",
+      "根据",
+      "具体"
+    ],
+    "difficulty_level": "intermediate",
+    "relevance_tags": [
+      "knowledge_病因",
+      "treatment"
+    ]
+  },
+  {
+    "id": "chunk_10",
+    "type": "medical_knowledge_chain",
+    "chapter": "心脏疾病概述",
+    "section": "介入治疗：",
+    "knowledge_patterns": [
+      "治疗"
+    ],
+    "content": "- 经皮冠状动脉介入治疗（PCI）",
+    "completeness_score": 0.16666666666666666,
+    "metadata": {
+      "source_type": "medical_textbook",
+      "page_number": "N/A",
+      "document_title": "心脏疾病学",
+      "line_numbers": [
+        50
+      ]
+    },
+    "medical_terms": [
+      "经皮",
+      "冠状动脉",
+      "介入",
+      "治疗",
+      "PCI"
+    ],
+    "keywords": [
+      "经皮",
+      "冠状动脉",
+      "介入",
+      "治疗",
+      "PCI"
+    ],
+    "difficulty_level": "intermediate",
+    "relevance_tags": [
+      "treatment",
+      "knowledge_治疗"
+    ]
+  },
+  {
+    "id": "chunk_11",
+    "type": "medical_knowledge_chain",
+    "chapter": "心脏疾病概述",
+    "section": "预后与预防",
+    "knowledge_patterns": [
+      "病因",
+      "预防"
+    ],
+    "content": "心脏疾病的预后取决于多种因素，包括病因、病情严重程度、治疗及时性等。早期诊断和及时治疗是改善预后的关键。 预防措施包括：",
+    "completeness_score": 0.16666666666666666,
+    "metadata": {
+      "source_type": "medical_textbook",
+      "page_number": "N/A",
+      "document_title": "心脏疾病学",
+      "line_numbers": [
+        61,
+        63
+      ]
+    },
+    "medical_terms": [
+      "关键",
+      "及时",
+      "心脏",
+      "病情严重",
+      "预防措施",
+      "程度",
+      "包括",
+      "取决于",
+      "病因",
+      "治疗",
+      "预后",
+      "及时性",
+      "因素",
+      "诊断",
+      "疾病",
+      "改善",
+      "早期",
+      "多种"
+    ],
+    "keywords": [
+      "预后",
+      "包括",
+      "治疗",
+      "心脏",
+      "疾病"
+    ],
+    "difficulty_level": "intermediate",
+    "relevance_tags": [
+      "diagnosis",
+      "knowledge_预防",
+      "knowledge_病因",
+      "treatment"
+    ]
+  },
+  {
+    "id": "chunk_12",
+    "type": "medical_knowledge_chain",
+    "chapter": "心脏疾病概述",
+    "section": "预后与预防",
+    "knowledge_patterns": [
+      "治疗",
+      "治疗",
+      "临床表现"
+    ],
+    "content": "- 定期体检：早期发现和治疗心血管疾病 表1-1 主要心血管疾病及治疗药物 | 疾病类型 | 主要症状 | 首选药物 | 剂量 |",
+    "completeness_score": 0.3333333333333333,
+    "metadata": {
+      "source_type": "medical_textbook",
+      "page_number": "N/A",
+      "document_title": "心脏疾病学",
+      "line_numbers": [
+        66,
+        68,
+        70
+      ]
+    },
+    "medical_terms": [
+      "发现",
+      "剂量",
+      "主要症状",
+      "药物",
+      "类型",
+      "治疗",
+      "体检",
+      "心血管",
+      "主要",
+      "首选",
+      "疾病",
+      "定期",
+      "早期"
+    ],
+    "keywords": [
+      "疾病",
+      "治疗",
+      "心血管",
+      "药物",
+      "定期"
+    ],
+    "difficulty_level": "intermediate",
+    "relevance_tags": [
+      "treatment",
+      "symptoms",
+      "knowledge_临床表现",
+      "knowledge_治疗"
+    ]
+  }
+]

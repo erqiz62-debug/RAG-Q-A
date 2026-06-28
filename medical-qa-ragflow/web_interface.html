@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>医学教材问答系统</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- 页面标题 -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-heartbeat"></i>
+                <h1>医学教材问答系统</h1>
+            </div>
+            <p class="subtitle">基于RAGFlow与DeepSeek的智能医学问答平台</p>
+        </header>
+
+        <!-- 系统控制面板 -->
+        <div class="control-panel">
+            <div class="control-section">
+                <h3><i class="fas fa-cogs"></i> 系统控制</h3>
+                <div class="button-group">
+                    <button id="startLightweight" class="btn btn-primary" title="启动轻量级医学问答系统，适合日常使用">
+                        <i class="fas fa-play"></i>
+                        启动轻量级问答
+                    </button>
+                    <button id="startFullDemo" class="btn btn-secondary" title="运行完整的系统功能演示，展示所有8项核心能力">
+                        <i class="fas fa-rocket"></i>
+                        完整功能演示
+                    </button>
+                    <button id="startDeploy" class="btn btn-warning" title="部署完整的生产环境系统">
+                        <i class="fas fa-tools"></i>
+                        系统部署
+                    </button>
+                </div>
+                <div class="button-help">
+                    <p><strong>💡 使用提示：</strong></p>
+                    <ul>
+                        <li><strong>轻量级问答：</strong> 适合日常医学问题咨询，响应快速</li>
+                        <li><strong>完整演示：</strong> 展示系统全部功能，包含5个测试问题</li>
+                        <li><strong>系统部署：</strong> 用于生产环境的完整部署版本</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="control-section">
+                <h3><i class="fas fa-info-circle"></i> 当前系统状态</h3>
+                <div class="status-grid">
+                    <div class="status-item">
+                        <span class="label">Python版本:</span>
+                        <span class="value" id="pythonVersion">3.7+</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="label">知识库状态:</span>
+                        <span class="value status-ready" id="knowledgeBase">4个知识块 ✓</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="label">医学术语:</span>
+                        <span class="value" id="medicalTerms">80+ 专业术语</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="label">置信度:</span>
+                        <span class="value status-good" id="confidence">0.2-0.58</span>
+                    </div>
+                </div>
+                <div class="status-details">
+                    <p><strong>📚 知识库来源：</strong> 06899029.pdf (20个问答对)</p>
+                    <p><strong>🔍 核心功能：</strong> 8项功能全部实现</p>
+                    <p><strong>⚡ 性能优化：</strong> 医学术语权重提升至0.15</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 系统功能展示 -->
+        <div class="features-section">
+            <h3><i class="fas fa-star"></i> 已实现的8项核心功能</h3>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-brain"></i>
+                    <h4>医学术语智能识别</h4>
+                    <p>自动识别疾病、解剖、检查、药物、症状等医学术语，权重提升至0.15</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-search"></i>
+                    <h4>Jaccard相似度计算</h4>
+                    <p>基于Jaccard算法的文本相似度计算，包含substring和special bonus</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-percentage"></i>
+                    <h4>置信度评分系统</h4>
+                    <p>实时为每个答案提供0.0-1.0的置信度评分，当前测试结果0.2-0.58</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-database"></i>
+                    <h4>教材知识库构建</h4>
+                    <p>从您的5个PDF教材自动构建20个知识块，80+医学术语分类</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-key"></i>
+                    <h4>关键词权重计算</h4>
+                    <p>TF-IDF算法提取关键词，支持中英文混合文本处理</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-sync-alt"></i>
+                    <h4>批量问答处理</h4>
+                    <p>支持批量处理多个问题，自动生成问答对和置信度评估</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-history"></i>
+                    <h4>完整日志记录</h4>
+                    <p>详细的操作日志、错误追踪和性能监控，Python 3.7+兼容</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-users"></i>
+                    <h4>用户友好交互</h4>
+                    <p>支持命令行交互、批量测试模式，Web界面实时展示</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 问答展示区域 -->
+        <div class="qa-section">
+            <h3><i class="fas fa-comments"></i> 实际测试结果展示</h3>
+            <div class="demo-questions">
+                <div class="question-item">
+                    <div class="question">什么是心脏病？</div>
+                    <div class="answer-preview">心脏病是心脏功能或结构异常的疾病总称，涉及多种心血管系统疾病</div>
+                    <div class="confidence confidence-medium">置信度: 0.20</div>
+                </div>
+                <div class="question-item">
+                    <div class="question">冠心病的诊断方法有哪些？</div>
+                    <div class="answer-preview">冠状动脉粥样硬化性心脏病的诊断方法包括心电图、冠脉造影等</div>
+                    <div class="confidence confidence-high">置信度: 0.52</div>
+                </div>
+                <div class="question-item">
+                    <div class="question">心力衰竭的症状和治疗方法</div>
+                    <div class="answer-preview">心力衰竭的症状包括呼吸困难、乏力等，治疗包括药物治疗和生活方式调整</div>
+                    <div class="confidence confidence-medium">置信度: 0.32</div>
+                </div>
+                <div class="question-item">
+                    <div class="question">高血压的治疗原则</div>
+                    <div class="answer-preview">高血压的治疗原则包括生活方式干预和药物治疗，目标血压控制</div>
+                    <div class="confidence confidence-medium">置信度: 0.42</div>
+                </div>
+                <div class="question-item">
+                    <div class="question">心肌梗死的急救措施</div>
+                    <div class="answer-preview">急性心肌梗死的急救处理原则包括立即就医、吸氧、监护等</div>
+                    <div class="confidence confidence-high">置信度: 0.58</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 运行结果展示 -->
+        <div class="results-section">
+            <h3><i class="fas fa-chart-line"></i> 运行结果</h3>
+            <div class="results-container">
+                <div class="output-area">
+                    <div class="output-header">
+                        <span><i class="fas fa-terminal"></i> 系统输出</span>
+                        <button id="clearOutput" class="btn btn-small">
+                            <i class="fas fa-trash"></i> 清空
+                        </button>
+                    </div>
+                    <div id="outputContent" class="output-content">
+                        <div class="placeholder">
+                            <i class="fas fa-info-circle"></i>
+                            <p>点击上方按钮启动系统，输出结果将显示在这里...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>技术栈</h4>
+                    <p>Python 3.7+ • RAGFlow • DeepSeek API • 向量数据库</p>
+                </div>
+                <div class="footer-section">
+                    <h4>系统特点</h4>
+                    <p>轻量级 • 高兼容 • 专业化 • 易部署</p>
+                </div>
+                <div class="footer-section">
+                    <h4>开发信息</h4>
+                    <p>开发完成时间: 2025年12月26日</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- 加载指示器 -->
+    <div id="loadingIndicator" class="loading-indicator hidden">
+        <div class="spinner"></div>
+        <p>系统运行中，请稍候...</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+# Python cache and local environments
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+.venv/
+venv/
+env/
+
+# Secrets and local machine configuration
+.env
+.env.*
+!.env.example
+
+# IDE/editor state
+.idea/
+.cursor/
+.vscode/
+
+# Logs and runtime output
+logs/
+*.log
+
+# Local vector databases and generated indexes
+data/chroma_db/
+medical-qa-ragflow/data/chroma_db/
+chroma_db/
+*.sqlite3
+*.sqlite3-*
+*.bin
+*.pickle
+
+# Large local archives and source documents
+*.zip
+*.rar
+*.7z
+教材/
+*.pdf
